@@ -7,6 +7,42 @@ import type { InferInput, SimpleError } from '@vinejs/vine/types'
 export type ParamValue = string | number | bigint | boolean
 
 export interface Registry {
+  'comentarios.store': {
+    methods: ["POST"]
+    pattern: '/posts/:slug/comentarios'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/comentario').crearComentarioValidator)>>
+      paramsTuple: [ParamValue]
+      params: { slug: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/comentario').crearComentarioValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/comentarios_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/comentarios_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'comentarios.destroy': {
+    methods: ["DELETE"]
+    pattern: '/comentarios/:id'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/comentario').identificacionValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/comentario').identificacionValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/comentarios_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/comentarios_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'comentarios.update': {
+    methods: ["PATCH"]
+    pattern: '/comentarios/:id'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/comentario').identificacionValidator)>|InferInput<(typeof import('#validators/comentario').editarCuerpoValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/comentario').identificacionValidator)>|InferInput<(typeof import('#validators/comentario').editarCuerpoValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/comentarios_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/comentarios_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
   'auth.new_account.store': {
     methods: ["POST"]
     pattern: '/api/v1/auth/signup'

@@ -6,6 +6,24 @@ import type { ApiDefinition } from './tree.d.ts'
 const placeholder: any = {}
 
 const routes = {
+  'comentarios.store': {
+    methods: ["POST"],
+    pattern: '/posts/:slug/comentarios',
+    tokens: [{"old":"/posts/:slug/comentarios","type":0,"val":"posts","end":""},{"old":"/posts/:slug/comentarios","type":1,"val":"slug","end":""},{"old":"/posts/:slug/comentarios","type":0,"val":"comentarios","end":""}],
+    types: placeholder as Registry['comentarios.store']['types'],
+  },
+  'comentarios.destroy': {
+    methods: ["DELETE"],
+    pattern: '/comentarios/:id',
+    tokens: [{"old":"/comentarios/:id","type":0,"val":"comentarios","end":""},{"old":"/comentarios/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['comentarios.destroy']['types'],
+  },
+  'comentarios.update': {
+    methods: ["PATCH"],
+    pattern: '/comentarios/:id',
+    tokens: [{"old":"/comentarios/:id","type":0,"val":"comentarios","end":""},{"old":"/comentarios/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['comentarios.update']['types'],
+  },
   'auth.new_account.store': {
     methods: ["POST"],
     pattern: '/api/v1/auth/signup',

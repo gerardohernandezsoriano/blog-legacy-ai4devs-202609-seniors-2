@@ -2,6 +2,11 @@
 import type { routes } from './index.ts'
 
 export interface ApiDefinition {
+  comentarios: {
+    store: typeof routes['comentarios.store']
+    destroy: typeof routes['comentarios.destroy']
+    update: typeof routes['comentarios.update']
+  }
   auth: {
     newAccount: {
       store: typeof routes['auth.new_account.store']
