@@ -437,6 +437,20 @@ test.group('DELETE /comentarios/:id', (group) => {
     assert.isNotNull(await db.from('comentarios').where('id', 9101).first())
   })
 
+  test('un correo que no es texto no autoriza y responde 403', async ({ client, assert }) => {
+    // Arrange
+    await db.table('posts').insert(unPostPublicado())
+    await db.table('comentarios').insert(unComentario())
+
+    // Act
+    const respuesta = await client.delete('/comentarios/9101').json({ autor_email: 12345 })
+
+    // Assert
+    respuesta.assertStatus(403)
+    respuesta.assertBody({ error: 'No puedes borrar este comentario' })
+    assert.isNotNull(await db.from('comentarios').where('id', 9101).first())
+  })
+
   test('responde 403 sin correo y sin clave', async ({ client, assert }) => {
     // Arrange
     await db.table('posts').insert(unPostPublicado())
@@ -554,6 +568,21 @@ test.group('PATCH /comentarios/:id', (group) => {
     assert.equal(guardada.cuerpo, 'Un cuerpo ya corregido.')
   })
 
+  test('devuelve creado_en null si el comentario no tiene fecha', async ({ client, assert }) => {
+    // Arrange
+    await db.table('posts').insert(unPostPublicado())
+    await db.table('comentarios').insert(unComentario({ creado_en: null }))
+
+    // Act
+    const respuesta = await client
+      .patch('/comentarios/9101')
+      .json({ autor_email: 'lucia.ferrer@ejemplo.es', cuerpo: 'Un cuerpo ya corregido.' })
+
+    // Assert
+    respuesta.assertStatus(200)
+    assert.isNull(respuesta.body().comentario.creado_en)
+  })
+
   test('no exige longitud mínima del cuerpo (la creación sí)', async ({ client, assert }) => {
     // Arrange
     await db.table('posts').insert(unPostPublicado())
@@ -657,7 +686,9 @@ test.group('PATCH /comentarios/:id', (group) => {
     await db.table('comentarios').insert(unComentario())
 
     // Act
-    const respuesta = await client.patch('/comentarios/9101').json({ cuerpo: 'Un cuerpo ya corregido.' })
+    const respuesta = await client
+      .patch('/comentarios/9101')
+      .json({ cuerpo: 'Un cuerpo ya corregido.' })
 
     // Assert
     respuesta.assertStatus(403)
